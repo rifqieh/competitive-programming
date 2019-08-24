@@ -48,7 +48,7 @@ public class CTP {
 
     static int m,n,k;
 
-//    public static Comparator<Bus> StuNameComparator = new Comparator<Bus>() {
+//    public static Comparator<Bus> WkBus = new Comparator<Bus>() {
 //
 //    public int compare(Bus b1, Bus b2) {
 //        int Waktu1 = b1.getWkAwal();
