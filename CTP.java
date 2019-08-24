@@ -13,6 +13,30 @@ class Bus{
         this.p_lancar = e;
         this.p_gagal = (1 - this.p_lancar);
     }
+
+    public int getStAwal(){
+        return st_awal;
+    }
+
+    public int getStAkhir(){
+        return st_akhir;
+    }
+
+    public int getWkAwal(){
+        return wk_awal;
+    }
+
+    public int getWkAkhir(){
+        return wk_akhir;
+    }
+
+    public double getLancar(){
+        return p_lancar;
+    }
+
+    public double getGagal(){
+        return p_gagal;
+    }
 }
 
 public class CTP {
@@ -23,6 +47,32 @@ public class CTP {
     static double e;
 
     static int m,n,k;
+
+//    public static Comparator<Bus> StuNameComparator = new Comparator<Bus>() {
+//
+//    public int compare(Bus b1, Bus b2) {
+//        int Waktu1 = b1.getWkAwal();
+//        int Waktu2 = b2.getWkAwal();
+//
+//        //urutan turun
+//        return Waktu1.compareTo(Waktu2);
+//
+//        //urutan naik
+//        //return Waktu2.compareTo(Waktu1);
+//    }};
+
+    public static Comparator<Bus> WkBus = new Comparator<Bus>() {
+
+    public int compare(Bus b1, Bus b2) {
+
+        int wk1 = b1.getWkAwal();
+        int wk2 = b2.getWkAwal();
+
+        //
+//        return wk1-wk2;
+
+        return wk2-wk1;
+    }};
 
     static Double busMacet(int i){
         ArrayList<Double> probs = new ArrayList<Double>();
@@ -35,11 +85,11 @@ public class CTP {
         double lancar = bus.get(i).p_lancar;
         double macet = bus.get(i).p_gagal;
 
-        if(lancar == 1.0 && st_akhir == 1 && awal == 0){
-            return lancar;
-        }
-
-        else{
+//        if(lancar == 1.0 && st_akhir == 1 && awal == 0){
+//            return lancar;
+//        }
+//
+//        else{
             for(int j = 0 ; j < m ; j++){
 
                 double t1 = bus.get(i).wk_akhir;
@@ -47,12 +97,24 @@ public class CTP {
 
 //            assert((j!=i) & (t2 >= t1));
 
-                if((j!=i) & (t2 >= t1)){
+//                if((j!=i) && (t2 >= t1) && (bus.get(j).st_akhir == 1) && (bus.get(j).p_lancar == 1.0)){
+//                    prob = (lancar + (macet*bus.get(j).p_lancar));
+//                    probs.add(prob);
+//                }
+
+                if((j!=i) && (t2 >= t1) && (bus.get(i).st_awal == bus.get(j).st_awal)){
                     prob = (lancar + (macet*busMacet(j)));
                     probs.add(prob);
                 }
+
+                if((j!=i) && (t2 > t1) && (bus.get(i).st_akhir == bus.get(j).st_awal)){
+                    prob = (macet + (lancar*busMacet(j)));
+                    probs.add(prob);
+                }
             }
-        }
+//        }
+
+        System.out.println(probs);
 
         if(bus.get(i).st_akhir == 1){
             if(probs.isEmpty()) return lancar;
@@ -79,12 +141,17 @@ public class CTP {
             bus.add(bb);
         }
 
+        Collections.sort(bus, CTP.WkBus);
+
         for(int l=0 ; l<m ; l++){
-            awal = bus.get(l).st_awal;
-            probabilitas.add(busMacet(l));
+            if(bus.get(l).st_awal == 0){
+                awal = bus.get(l).st_awal;
+                probabilitas.add(busMacet(l));
+            }
         }
 
-        System.out.println(Collections.max(probabilitas));
+        System.out.println("Hasil: " + Collections.max(probabilitas));
 
     }
+
 }
